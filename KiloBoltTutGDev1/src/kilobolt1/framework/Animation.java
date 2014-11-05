@@ -43,8 +43,6 @@ public class Animation {
 				currentframe++;
 			}
 		}
-		
-		
 	}
 
 	public synchronized Image getImage() {
