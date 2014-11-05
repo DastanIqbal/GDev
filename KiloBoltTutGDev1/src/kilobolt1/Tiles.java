@@ -13,10 +13,17 @@ public class Tiles {
 		tileY=y*40;
 		this.type=type;
 		
-		if(type==1){
-			tileimage=StartingClass.tileOcean;
-		}else if(type==2){
+		//5,8,2,4,6 numpad mid,top,bot,left,right
+		if(type==5){
 			tileimage=StartingClass.tileDirt;
+		}else if(type==8){
+			tileimage=StartingClass.tilegrassTop;
+		}else if(type==2){
+			tileimage=StartingClass.tilegrassBot;
+		}else if(type==4){
+			tileimage=StartingClass.tilegrassLeft;
+		}else if(type==6){
+			tileimage=StartingClass.tilegrassRight;
 		}
 	}
 	
