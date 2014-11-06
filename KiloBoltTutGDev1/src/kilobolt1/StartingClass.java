@@ -26,7 +26,9 @@ import IqbalUtils.Logging;
 
 public class StartingClass extends Applet implements Runnable, KeyListener {
 
-	private Robot robot;
+	private static Robot robot;
+	
+
 	private Heliboy hb1, hb2;
 	private Image image, character, character2, character3, background,
 			currentSprite, characterJumped, characterDown, heliboy, heliboy2,
@@ -115,7 +117,8 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
 		bg1 = new Background(0, 0);
 		bg2 = new Background(2160, 0);
-
+		robot = new Robot();
+		
 		// Intialize Tiles
 
 		try {
@@ -127,7 +130,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 		hb1 = new Heliboy(340, 360);
 		hb2 = new Heliboy(700, 360);
 
-		robot = new Robot();
+		
 
 		Thread thread = new Thread(this);
 		thread.start();
@@ -291,9 +294,11 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
 			g.fillRect(p.getX(), p.getY(), 20, 10);
 		}
+		
+		g.drawRect((int)robot.rect.getX(), (int)robot.rect.getY(),(int)robot.rect.getWidth(), (int)robot.rect.getHeight());
+		g.drawRect((int)robot.rect2.getX(), (int)robot.rect2.getY(),(int)robot.rect2.getWidth(), (int)robot.rect2.getHeight());
 		g.drawImage(currentSprite, robot.getCenterX() - 61,
 				robot.getCenterY() - 63, this);
-
 		g.drawImage(hanim.getImage(), hb1.getCenterX() - 48,
 				hb1.getCenterY() - 48, this);
 		g.drawImage(hanim.getImage(), hb2.getCenterX() - 48,
@@ -335,6 +340,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 		case KeyEvent.VK_CONTROL:
 			if (robot.isDucked() == false && robot.isJumped() == false) {
 				robot.shoot();
+				robot.setReadyToFire(false);
 			}
 			break;
 
@@ -361,6 +367,9 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 			currentSprite = anim.getImage();
 			robot.setDucked(false);
 			break;
+		case KeyEvent.VK_CONTROL:
+			robot.setReadyToFire(true);
+			break;
 		}
 	}
 
@@ -376,6 +385,13 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 	 */
 	public static Background getBg2() {
 		return bg2;
+	}
+	
+	/**
+	 * @return the robot
+	 */
+	public static Robot getRobot() {
+		return robot;
 	}
 
 }
