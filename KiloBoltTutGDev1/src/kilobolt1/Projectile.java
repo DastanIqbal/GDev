@@ -1,22 +1,44 @@
 package kilobolt1;
 
+import java.awt.Rectangle;
+
 public class Projectile {
 
 	private int x, y, speedX;
 	private boolean visible;
+	private Rectangle rect;
 
 	public Projectile(int x, int y) {
 
 		this.x = x;
 		this.y = y;
 		speedX = 7;
-		visible=true;
+		visible = true;
+		rect = new Rectangle(0, 0, 0, 0);
 	}
 
 	public void update() {
 		x += speedX;
+		rect.setBounds(x, y, 50, 10);
 		if (x > 800) {
 			visible = false;
+			rect = null;
+		}
+
+		if (x < 801) {
+			checkCollission();
+		}
+	}
+
+	private void checkCollission() {
+		if(rect.intersects(StartingClass.hb1.r)){
+			visible=false;
+			StartingClass.score+=1;
+		}
+		
+		if(rect.intersects(StartingClass.hb2.r)){
+			visible=false;
+			StartingClass.score+=1;
 		}
 	}
 
