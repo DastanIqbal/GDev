@@ -1,23 +1,45 @@
 package kilobolt1;
 
+import java.awt.Rectangle;
+
+import IqbalUtils.Logging;
+
 public class Enemy {
 
 	private int centerX, centerY, speedX, power, maxHealth, currentHealth;
 	private Background bg1 = StartingClass.getBg1();
 
-	public void update(){
-		centerX+=speedX;
-		speedX=bg1.getSpeedX()*5;
+	public Rectangle r = new Rectangle(0, 0, 0, 0);
+
+	public void update() {
+		centerX += speedX;
+		speedX = bg1.getSpeedX() * 5;
+		r.setBounds(centerX - 25, centerY - 25, 50, 60);
+
+		if (r.intersects(Robot.yellowRed)) {
+			checkCollosion();
+		}
 	}
 
-	public void die(){
-		
+	private void checkCollosion() {
+		if (r.intersects(Robot.footleft) || r.intersects(Robot.footright)
+				|| r.intersects(Robot.rectLeft)
+				|| r.intersects(Robot.rectRight)
+				|| r.intersects(Robot.rectLower)
+				|| r.intersects(Robot.rectUpper)) {
+
+			Logging.Log("Collision");
+		}
 	}
-	
-	public void attack(){
-		
+
+	public void die() {
+
 	}
-	
+
+	public void attack() {
+
+	}
+
 	/**
 	 * @return the centerX
 	 */
