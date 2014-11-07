@@ -2,6 +2,7 @@ package kilobolt1;
 
 import java.applet.Applet;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -27,8 +28,9 @@ import IqbalUtils.Logging;
 public class StartingClass extends Applet implements Runnable, KeyListener {
 
 	private static Robot robot;
-
-	private Heliboy hb1, hb2;
+	public static int score = 0;
+	public static Heliboy hb1, hb2;
+	private Font font = new Font(null, Font.BOLD, 30);
 	private Image image, character, character2, character3, background,
 			currentSprite, characterJumped, characterDown, heliboy, heliboy2,
 			heliboy3, heliboy4, heliboy5;
@@ -321,6 +323,15 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 				hb1.getCenterY() - 48, this);
 		g.drawImage(hanim.getImage(), hb2.getCenterX() - 48,
 				hb2.getCenterY() - 48, this);
+		
+		g.drawRect((int)hb1.r.getX(),(int) hb1.r.getY(), (int)hb1.r.getWidth(),
+				(int)hb1.r.getHeight());
+		g.drawRect((int)hb2.r.getX(),(int) hb2.r.getY(), (int)hb2.r.getWidth(),
+				(int)hb2.r.getHeight());
+
+		g.setFont(font);
+		g.setColor(Color.WHITE);
+		g.drawString(score + "", 750, 30);
 
 	}
 
