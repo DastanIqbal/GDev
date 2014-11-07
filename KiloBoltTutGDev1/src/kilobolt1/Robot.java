@@ -11,9 +11,7 @@ public class Robot {
 
 	private int centerX = 100;
 	private int centerY = 377;
-	public static Rectangle rect = new Rectangle(0, 0, 0, 0);
-	public static Rectangle rect2 = new Rectangle(0, 0, 0, 0);
-
+	
 	private boolean jumped = false;
 	private boolean movingLeft = false;
 	private boolean movingRight = false;
@@ -25,7 +23,18 @@ public class Robot {
 
 	private int speedX = 0;
 	private int speedY = 0;
+	
+	public static Rectangle rectUpper = new Rectangle(0, 0, 0, 0);	//Upper
+	public static Rectangle rectLower = new Rectangle(0, 0, 0, 0);	//Lower
+	public static Rectangle rectLeft = new Rectangle(0, 0, 0, 0);	//Left
+	public static Rectangle rectRight = new Rectangle(0, 0, 0, 0);	//Right
+	public static Rectangle yellowRed = new Rectangle(0, 0, 0, 0);	// Character Area 
 
+	public static Rectangle footleft = new Rectangle(0, 0, 0, 0);	//left
+	public static Rectangle footright = new Rectangle(0, 0, 0, 0);	//right
+
+	
+	
 	private ArrayList<Projectile> projlist = new ArrayList<Projectile>();
 
 	public void update() {
@@ -36,7 +45,7 @@ public class Robot {
 			centerX += speedX;
 		}
 
-		if (speedX == 0 && speedX < 0) {
+		if (speedX == 0 || speedX < 0) {
 			bg1.setSpeedX(0);
 			bg2.setSpeedX(0);
 		}
@@ -54,10 +63,12 @@ public class Robot {
 		centerY += speedY;
 
 		// Handle Jump
-		if (jumped) {
-			// Add 1 when character in air it will take the charachter downward
-			speedY += 1;
 
+		// Add 1 when character in air it will take the charachter downward
+		speedY += 1;
+
+		if (speedY > 3) {
+			jumped = true;
 		}
 
 		// Prevents character don't go outside the screen
@@ -65,9 +76,18 @@ public class Robot {
 			// Fix character x position
 			centerX = 61;
 		}
+
+		//
+		rectUpper.setRect(centerX - 34, centerY - 63, 68, 63);
+		rectLower.setRect(rectUpper.getX(), rectUpper.getY() + 63, 68, 63);
+		rectLeft.setRect(rectUpper.getX() - 26, rectUpper.getY() + 32, 26, 20);
+		rectRight.setRect(rectUpper.getX() + 68, rectUpper.getY() + 32, 26, 20);
+		yellowRed.setRect(centerX- 110, centerY - 110, 180, 180);
 		
-		rect.setRect(centerX-34,centerY-63,68,63);
-		rect2.setRect(rect.getX(),rect.getY()+63,68,64);
+		footleft.setRect(centerX - 50, centerY + 20, 50, 15);
+		footright.setRect(centerX, centerY + 20, 50, 15);
+
+		
 	}
 
 	public void moveRight() {

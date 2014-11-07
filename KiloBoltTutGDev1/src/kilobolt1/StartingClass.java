@@ -27,7 +27,6 @@ import IqbalUtils.Logging;
 public class StartingClass extends Applet implements Runnable, KeyListener {
 
 	private static Robot robot;
-	
 
 	private Heliboy hb1, hb2;
 	private Image image, character, character2, character3, background,
@@ -118,7 +117,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 		bg1 = new Background(0, 0);
 		bg2 = new Background(2160, 0);
 		robot = new Robot();
-		
+
 		// Intialize Tiles
 
 		try {
@@ -129,8 +128,6 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
 		hb1 = new Heliboy(340, 360);
 		hb2 = new Heliboy(700, 360);
-
-		
 
 		Thread thread = new Thread(this);
 		thread.start();
@@ -160,11 +157,11 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
 			height = lines.size();
 			for (int i = 0; i < height; i++) {
-				String line=(String) lines.get(i);
+				String line = (String) lines.get(i);
 				for (int j = 0; j < width; j++) {
-					if(j<line.length()){
-						char ch=line.charAt(j);
-						Tiles t=new Tiles(j, i,Character.getNumericValue(ch));
+					if (j < line.length()) {
+						char ch = line.charAt(j);
+						Tiles t = new Tiles(j, i, Character.getNumericValue(ch));
 						tilearray.add(t);
 					}
 				}
@@ -294,9 +291,30 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
 			g.fillRect(p.getX(), p.getY(), 20, 10);
 		}
-		
-		g.drawRect((int)robot.rect.getX(), (int)robot.rect.getY(),(int)robot.rect.getWidth(), (int)robot.rect.getHeight());
-		g.drawRect((int)robot.rect2.getX(), (int)robot.rect2.getY(),(int)robot.rect2.getWidth(), (int)robot.rect2.getHeight());
+
+		g.drawRect((int) Robot.rectUpper.getX(), (int) Robot.rectUpper.getY(),
+				(int) Robot.rectUpper.getWidth(),
+				(int) Robot.rectUpper.getHeight());
+		g.drawRect((int) Robot.rectLower.getX(), (int) Robot.rectLower.getY(),
+				(int) Robot.rectLower.getWidth(),
+				(int) Robot.rectLower.getHeight());
+		g.drawRect((int) Robot.rectLeft.getX(), (int) Robot.rectLeft.getY(),
+				(int) Robot.rectLeft.getWidth(),
+				(int) Robot.rectLeft.getHeight());
+		g.drawRect((int) Robot.rectRight.getX(), (int) Robot.rectRight.getY(),
+				(int) Robot.rectRight.getWidth(),
+				(int) Robot.rectRight.getHeight());
+		g.drawRect((int) Robot.yellowRed.getX(), (int) Robot.yellowRed.getY(),
+				(int) Robot.yellowRed.getWidth(),
+				(int) Robot.yellowRed.getHeight());
+		g.drawRect((int) Robot.footleft.getX(), (int) Robot.footleft.getY(),
+				(int) Robot.footleft.getWidth(),
+				(int) Robot.footleft.getHeight());
+		g.drawRect((int) Robot.footright.getX(), (int) Robot.footright.getY(),
+				(int) Robot.footright.getWidth(),
+				(int) Robot.footright.getHeight());
+
+		// currentSprite 122x126
 		g.drawImage(currentSprite, robot.getCenterX() - 61,
 				robot.getCenterY() - 63, this);
 		g.drawImage(hanim.getImage(), hb1.getCenterX() - 48,
@@ -327,8 +345,8 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 			robot.setMovingRight(true);
 			break;
 		case KeyEvent.VK_UP:
-			robot.moveTop();
-			// Logging.Log("Pressed moving up Stop");
+			// robot.moveTop();
+			Logging.Log("Pressed moving up Stop");
 			break;
 		case KeyEvent.VK_DOWN:
 			currentSprite = characterDown;
@@ -338,7 +356,8 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 			}
 			break;
 		case KeyEvent.VK_CONTROL:
-			if (robot.isDucked() == false && robot.isJumped() == false) {
+			if (robot.isDucked() == false && robot.isJumped() == false
+					&& robot.isReadyToFire()) {
 				robot.shoot();
 				robot.setReadyToFire(false);
 			}
@@ -386,7 +405,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 	public static Background getBg2() {
 		return bg2;
 	}
-	
+
 	/**
 	 * @return the robot
 	 */
