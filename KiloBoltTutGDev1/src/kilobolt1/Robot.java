@@ -65,6 +65,7 @@ public class Robot {
 		// Handle Jump
 
 		// Add 1 when character in air it will take the charachter downward
+		
 		speedY += 1;
 
 		if (speedY > 3) {

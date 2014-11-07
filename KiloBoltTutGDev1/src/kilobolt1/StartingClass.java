@@ -39,8 +39,17 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 	private Graphics second;
 	private URL base;
 	private static Background bg1, bg2;
-	private Animation anim, hanim;
+	private Animation anim;
+	public static Animation hanim;
 	private ArrayList<Tiles> tilearray = new ArrayList<Tiles>();
+	private ArrayList<Heliboy> enemyarray = new ArrayList<Heliboy>();
+
+	enum GameState {
+		RUNNING, DEAD
+	}
+
+	GameState state = GameState.RUNNING;
+	private Thread thread;
 
 	/*
 	 * (non-Javadoc)
@@ -127,11 +136,11 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+//
+//		hb1 = new Heliboy(340, 360);
+//		hb2 = new Heliboy(700, 360);
 
-		hb1 = new Heliboy(340, 360);
-		hb2 = new Heliboy(700, 360);
-
-		Thread thread = new Thread(this);
+		thread = new Thread(this);
 		thread.start();
 
 	}
@@ -163,8 +172,14 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 				for (int j = 0; j < width; j++) {
 					if (j < line.length()) {
 						char ch = line.charAt(j);
-						Tiles t = new Tiles(j, i, Character.getNumericValue(ch));
-						tilearray.add(t);
+						if (Character.getNumericValue(ch) == 9) {
+							Heliboy heli = new Heliboy(j, i);
+							enemyarray.add(heli);
+						} else {
+							Tiles t = new Tiles(j, i,
+									Character.getNumericValue(ch));
+							tilearray.add(t);
+						}
 					}
 				}
 			}
@@ -176,6 +191,21 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void updateEnemy() {
+		for (int i = 0; i < enemyarray.size(); i++) {
+			Heliboy heli = enemyarray.get(i);
+			heli.update();
+		}
+	}
+
+	public void paintEnemy(Graphics g) {
+		for (int i = 0; i < enemyarray.size(); i++) {
+			Heliboy heli = enemyarray.get(i);
+			g.drawImage(heli.getImage().getImage(), heli.getCenterX()-48,
+					heli.getCenterY()-48, this);
+		}
 	}
 
 	public void updateTiles() {
@@ -222,36 +252,45 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 	@Override
 	public void run() {
 		System.out.println("Run");
-		while (true) {
-			robot.update();
-			if (robot.isJumped()) {
-				currentSprite = characterJumped;
-			} else if (robot.isJumped() == false && robot.isDucked() == false) {
-				currentSprite = anim.getImage();
-			}
 
-			ArrayList<Projectile> projList = robot.getProjlist();
-			for (int i = 0; i < projList.size(); i++) {
-				Projectile projectile = projList.get(i);
-				if (projectile.isVisible() == true) {
-					projectile.update();
-				} else {
-					projList.remove(i);
+		if (state == GameState.RUNNING) {
+			while (true) {
+				robot.update();
+				if (robot.isJumped()) {
+					currentSprite = characterJumped;
+				} else if (robot.isJumped() == false
+						&& robot.isDucked() == false) {
+					currentSprite = anim.getImage();
 				}
-			}
 
-			updateTiles();
-			hb1.update();
-			hb2.update();
-			bg1.update();
-			bg2.update();
-			animate();
-			repaint();
-			try {
-				Thread.sleep(17);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				ArrayList<Projectile> projList = robot.getProjlist();
+				for (int i = 0; i < projList.size(); i++) {
+					Projectile projectile = projList.get(i);
+					if (projectile.isVisible() == true) {
+						projectile.update();
+					} else {
+						projList.remove(i);
+					}
+				}
+
+				updateTiles();
+				updateEnemy();
+//				hb1.update();
+//				hb2.update();
+				bg1.update();
+				bg2.update();
+				animate();
+				repaint();
+				if (robot.getCenterY() > 500) {
+					state = GameState.DEAD;
+
+				}
+				try {
+					Thread.sleep(17);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -281,57 +320,72 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 	@Override
 	public void paint(Graphics g) {
 		System.out.println("paint");
-		g.drawImage(background, bg1.getBgX(), bg1.getBgY(), this);
-		g.drawImage(background, bg2.getBgX(), bg2.getBgY(), this);
+		if (state == GameState.RUNNING) {
+			g.drawImage(background, bg1.getBgX(), bg1.getBgY(), this);
+			g.drawImage(background, bg2.getBgX(), bg2.getBgY(), this);
 
-		paintTiles(g);
+			paintTiles(g);
+			paintEnemy(g);
+			
+			ArrayList<Projectile> projlist = robot.getProjlist();
+			for (int i = 0; i < projlist.size(); i++) {
+				Projectile p = projlist.get(i);
+				g.setColor(Color.YELLOW);
 
-		ArrayList<Projectile> projlist = robot.getProjlist();
-		for (int i = 0; i < projlist.size(); i++) {
-			Projectile p = projlist.get(i);
-			g.setColor(Color.YELLOW);
+				g.fillRect(p.getX(), p.getY(), 20, 10);
+			}
 
-			g.fillRect(p.getX(), p.getY(), 20, 10);
+			g.drawRect((int) Robot.rectUpper.getX(),
+					(int) Robot.rectUpper.getY(),
+					(int) Robot.rectUpper.getWidth(),
+					(int) Robot.rectUpper.getHeight());
+			g.drawRect((int) Robot.rectLower.getX(),
+					(int) Robot.rectLower.getY(),
+					(int) Robot.rectLower.getWidth(),
+					(int) Robot.rectLower.getHeight());
+			g.drawRect((int) Robot.rectLeft.getX(),
+					(int) Robot.rectLeft.getY(),
+					(int) Robot.rectLeft.getWidth(),
+					(int) Robot.rectLeft.getHeight());
+			g.drawRect((int) Robot.rectRight.getX(),
+					(int) Robot.rectRight.getY(),
+					(int) Robot.rectRight.getWidth(),
+					(int) Robot.rectRight.getHeight());
+			g.drawRect((int) Robot.yellowRed.getX(),
+					(int) Robot.yellowRed.getY(),
+					(int) Robot.yellowRed.getWidth(),
+					(int) Robot.yellowRed.getHeight());
+			g.drawRect((int) Robot.footleft.getX(),
+					(int) Robot.footleft.getY(),
+					(int) Robot.footleft.getWidth(),
+					(int) Robot.footleft.getHeight());
+			g.drawRect((int) Robot.footright.getX(),
+					(int) Robot.footright.getY(),
+					(int) Robot.footright.getWidth(),
+					(int) Robot.footright.getHeight());
+
+			// currentSprite 122x126
+			g.drawImage(currentSprite, robot.getCenterX() - 61,
+					robot.getCenterY() - 63, this);
+//			g.drawImage(hanim.getImage(), hb1.getCenterX() - 48,
+//					hb1.getCenterY() - 48, this);
+//			g.drawImage(hanim.getImage(), hb2.getCenterX() - 48,
+//					hb2.getCenterY() - 48, this);
+
+//			g.drawRect((int) hb1.r.getX(), (int) hb1.r.getY(),
+//					(int) hb1.r.getWidth(), (int) hb1.r.getHeight());
+//			g.drawRect((int) hb2.r.getX(), (int) hb2.r.getY(),
+//					(int) hb2.r.getWidth(), (int) hb2.r.getHeight());
+
+			g.setFont(font);
+			g.setColor(Color.WHITE);
+			g.drawString(score + "", 750, 30);
+		} else if (state == GameState.DEAD) {
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, 800, 480);
+			g.setColor(Color.WHITE);
+			g.drawString("DEAD", 340, 240);
 		}
-
-		g.drawRect((int) Robot.rectUpper.getX(), (int) Robot.rectUpper.getY(),
-				(int) Robot.rectUpper.getWidth(),
-				(int) Robot.rectUpper.getHeight());
-		g.drawRect((int) Robot.rectLower.getX(), (int) Robot.rectLower.getY(),
-				(int) Robot.rectLower.getWidth(),
-				(int) Robot.rectLower.getHeight());
-		g.drawRect((int) Robot.rectLeft.getX(), (int) Robot.rectLeft.getY(),
-				(int) Robot.rectLeft.getWidth(),
-				(int) Robot.rectLeft.getHeight());
-		g.drawRect((int) Robot.rectRight.getX(), (int) Robot.rectRight.getY(),
-				(int) Robot.rectRight.getWidth(),
-				(int) Robot.rectRight.getHeight());
-		g.drawRect((int) Robot.yellowRed.getX(), (int) Robot.yellowRed.getY(),
-				(int) Robot.yellowRed.getWidth(),
-				(int) Robot.yellowRed.getHeight());
-		g.drawRect((int) Robot.footleft.getX(), (int) Robot.footleft.getY(),
-				(int) Robot.footleft.getWidth(),
-				(int) Robot.footleft.getHeight());
-		g.drawRect((int) Robot.footright.getX(), (int) Robot.footright.getY(),
-				(int) Robot.footright.getWidth(),
-				(int) Robot.footright.getHeight());
-
-		// currentSprite 122x126
-		g.drawImage(currentSprite, robot.getCenterX() - 61,
-				robot.getCenterY() - 63, this);
-		g.drawImage(hanim.getImage(), hb1.getCenterX() - 48,
-				hb1.getCenterY() - 48, this);
-		g.drawImage(hanim.getImage(), hb2.getCenterX() - 48,
-				hb2.getCenterY() - 48, this);
-		
-		g.drawRect((int)hb1.r.getX(),(int) hb1.r.getY(), (int)hb1.r.getWidth(),
-				(int)hb1.r.getHeight());
-		g.drawRect((int)hb2.r.getX(),(int) hb2.r.getY(), (int)hb2.r.getWidth(),
-				(int)hb2.r.getHeight());
-
-		g.setFont(font);
-		g.setColor(Color.WHITE);
-		g.drawString(score + "", 750, 30);
 
 	}
 
@@ -399,6 +453,9 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 			break;
 		case KeyEvent.VK_CONTROL:
 			robot.setReadyToFire(true);
+			break;
+		case KeyEvent.VK_R:
+			Logging.Log("Code for Restart");
 			break;
 		}
 	}
