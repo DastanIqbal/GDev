@@ -42,7 +42,8 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 	private Animation anim;
 	public static Animation hanim;
 	private ArrayList<Tiles> tilearray = new ArrayList<Tiles>();
-	private ArrayList<Heliboy> enemyarray = new ArrayList<Heliboy>();
+
+	// private ArrayList<Heliboy> enemyarray = new ArrayList<Heliboy>();
 
 	enum GameState {
 		RUNNING, DEAD
@@ -136,9 +137,9 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-//
-//		hb1 = new Heliboy(340, 360);
-//		hb2 = new Heliboy(700, 360);
+
+		hb1 = new Heliboy(340, 360);
+		hb2 = new Heliboy(700, 360);
 
 		thread = new Thread(this);
 		thread.start();
@@ -172,10 +173,11 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 				for (int j = 0; j < width; j++) {
 					if (j < line.length()) {
 						char ch = line.charAt(j);
-						if (Character.getNumericValue(ch) == 9) {
-							Heliboy heli = new Heliboy(j, i);
-							enemyarray.add(heli);
-						} else {
+						// if (Character.getNumericValue(ch) == 9) {
+						// Heliboy heli = new Heliboy(j, i);
+						// enemyarray.add(heli);
+						// } else
+						{
 							Tiles t = new Tiles(j, i,
 									Character.getNumericValue(ch));
 							tilearray.add(t);
@@ -193,20 +195,20 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
 	}
 
-	public void updateEnemy() {
-		for (int i = 0; i < enemyarray.size(); i++) {
-			Heliboy heli = enemyarray.get(i);
-			heli.update();
-		}
-	}
-
-	public void paintEnemy(Graphics g) {
-		for (int i = 0; i < enemyarray.size(); i++) {
-			Heliboy heli = enemyarray.get(i);
-			g.drawImage(heli.getImage().getImage(), heli.getCenterX()-48,
-					heli.getCenterY()-48, this);
-		}
-	}
+	// public void updateEnemy() {
+	// for (int i = 0; i < enemyarray.size(); i++) {
+	// Heliboy heli = enemyarray.get(i);
+	// heli.update();
+	// }
+	// }
+	//
+	// public void paintEnemy(Graphics g) {
+	// for (int i = 0; i < enemyarray.size(); i++) {
+	// Heliboy heli = enemyarray.get(i);
+	// g.drawImage(heli.getImage().getImage(), heli.getCenterX()-48,
+	// heli.getCenterY()-48, this);
+	// }
+	// }
 
 	public void updateTiles() {
 		for (int i = 0; i < tilearray.size(); i++) {
@@ -274,9 +276,9 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 				}
 
 				updateTiles();
-				updateEnemy();
-//				hb1.update();
-//				hb2.update();
+				// updateEnemy();
+				hb1.update();
+				hb2.update();
 				bg1.update();
 				bg2.update();
 				animate();
@@ -325,8 +327,8 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 			g.drawImage(background, bg2.getBgX(), bg2.getBgY(), this);
 
 			paintTiles(g);
-			paintEnemy(g);
-			
+			// paintEnemy(g);
+
 			ArrayList<Projectile> projlist = robot.getProjlist();
 			for (int i = 0; i < projlist.size(); i++) {
 				Projectile p = projlist.get(i);
@@ -367,15 +369,15 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 			// currentSprite 122x126
 			g.drawImage(currentSprite, robot.getCenterX() - 61,
 					robot.getCenterY() - 63, this);
-//			g.drawImage(hanim.getImage(), hb1.getCenterX() - 48,
-//					hb1.getCenterY() - 48, this);
-//			g.drawImage(hanim.getImage(), hb2.getCenterX() - 48,
-//					hb2.getCenterY() - 48, this);
+			g.drawImage(hanim.getImage(), hb1.getCenterX() - 48,
+					hb1.getCenterY() - 48, this);
+			g.drawImage(hanim.getImage(), hb2.getCenterX() - 48,
+					hb2.getCenterY() - 48, this);
 
-//			g.drawRect((int) hb1.r.getX(), (int) hb1.r.getY(),
-//					(int) hb1.r.getWidth(), (int) hb1.r.getHeight());
-//			g.drawRect((int) hb2.r.getX(), (int) hb2.r.getY(),
-//					(int) hb2.r.getWidth(), (int) hb2.r.getHeight());
+			// g.drawRect((int) hb1.r.getX(), (int) hb1.r.getY(),
+			// (int) hb1.r.getWidth(), (int) hb1.r.getHeight());
+			// g.drawRect((int) hb2.r.getX(), (int) hb2.r.getY(),
+			// (int) hb2.r.getWidth(), (int) hb2.r.getHeight());
 
 			g.setFont(font);
 			g.setColor(Color.WHITE);

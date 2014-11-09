@@ -7,9 +7,9 @@ public class Heliboy extends Enemy {
 	private Animation image;
 
 	public Heliboy(int centerX, int centerY) {
-		setCenterX(centerX*40);
-		setCenterY(centerY*40);
-		setImage(StartingClass.hanim);
+		setCenterX(centerX);
+		setCenterY(centerY);
+	//	setImage(StartingClass.hanim);
 	}
 
 	/**

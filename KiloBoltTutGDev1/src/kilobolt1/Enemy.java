@@ -6,9 +6,9 @@ import IqbalUtils.Logging;
 
 public class Enemy {
 
-	private int centerX, centerY, speedX, power, maxHealth, currentHealth;
+	private int centerX, centerY, speedX, power;
 	private Background bg1 = StartingClass.getBg1();
-
+	public int health=5;
 	public Rectangle r = new Rectangle(0, 0, 0, 0);
 
 	public void update() {
@@ -69,20 +69,6 @@ public class Enemy {
 	}
 
 	/**
-	 * @return the maxHealth
-	 */
-	public int getMaxHealth() {
-		return maxHealth;
-	}
-
-	/**
-	 * @return the currentHealth
-	 */
-	public int getCurrentHealth() {
-		return currentHealth;
-	}
-
-	/**
 	 * @return the bg1
 	 */
 	public Background getBg1() {
@@ -121,22 +107,7 @@ public class Enemy {
 		this.power = power;
 	}
 
-	/**
-	 * @param maxHealth
-	 *            the maxHealth to set
-	 */
-	public void setMaxHealth(int maxHealth) {
-		this.maxHealth = maxHealth;
-	}
-
-	/**
-	 * @param currentHealth
-	 *            the currentHealth to set
-	 */
-	public void setCurrentHealth(int currentHealth) {
-		this.currentHealth = currentHealth;
-	}
-
+	
 	/**
 	 * @param bg1
 	 *            the bg1 to set
