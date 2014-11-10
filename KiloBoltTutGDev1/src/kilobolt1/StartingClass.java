@@ -300,7 +300,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 	public void animate() {
 		System.out.println("Animate");
 		anim.update(10);
-		hanim.update(50);
+//		hanim.update(50);
 	}
 
 	@Override

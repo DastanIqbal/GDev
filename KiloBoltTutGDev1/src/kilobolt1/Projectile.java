@@ -7,6 +7,7 @@ public class Projectile {
 	private int x, y, speedX;
 	private boolean visible;
 	private Rectangle rect;
+	
 
 	public Projectile(int x, int y) {
 

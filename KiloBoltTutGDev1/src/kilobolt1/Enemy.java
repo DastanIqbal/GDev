@@ -10,10 +10,13 @@ public class Enemy {
 	private Background bg1 = StartingClass.getBg1();
 	public int health=5;
 	public Rectangle r = new Rectangle(0, 0, 0, 0);
-
+	private int movementSpeed;
+	private Robot robot = StartingClass.getRobot();
+	
 	public void update() {
+		follow();
 		centerX += speedX;
-		speedX = bg1.getSpeedX() * 5;
+		speedX = bg1.getSpeedX() * 5+movementSpeed;
 		r.setBounds(centerX - 25, centerY - 25, 50, 60);
 
 		if (r.intersects(Robot.yellowRed)) {
@@ -32,6 +35,19 @@ public class Enemy {
 		}
 	}
 
+	private void follow(){
+		if(centerX<-95 || centerX>810)
+			movementSpeed=0;
+		else if(Math.abs(robot.getCenterX()-centerX)<5)
+			movementSpeed=0;
+		
+		if(robot.getCenterX()>=centerX){
+			movementSpeed=1;
+		}else{
+			movementSpeed=-1;
+		}
+	}
+	
 	public void die() {
 
 	}
